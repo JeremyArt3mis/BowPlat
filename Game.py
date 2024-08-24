@@ -14,7 +14,7 @@ class Game:
         self.sprite_sheet = sprites(pygame.image.load("Player_Assets/animations/spritesheets/Player_Sheet_288x128.png"),100)
         
         self.test_rect = pygame.Rect(0,900,1700,200)
-        self.player = Player(500,500,self.sprite_sheet,self)
+        self.player = Player(500,300,self.sprite_sheet,self)
     def run(self):
         while True:
             self.clock.tick(60)
@@ -23,6 +23,7 @@ class Game:
                     pygame.quit()
             #self.platformer_physics()
             self.player.handle_input()
+            self.player.update()
             self.render()
             pygame.display.update()
     
@@ -56,4 +57,5 @@ class Game:
         
     
 game = Game()
+game.run()
 game.run()
