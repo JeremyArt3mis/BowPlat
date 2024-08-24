@@ -1,5 +1,6 @@
 import pygame,sys
 from sprites import sprites
+import math
 
 class Player:
     def __init__(self,x,y,sprite_sheet,game):
@@ -10,15 +11,28 @@ class Player:
         self.game = game
         self.xspeed = 0
         self.yspeed = 0
-        self.action = "idle"
+        self.action = "run"
         self.frame = 0
+        self.max_frame = 10
+      
     
     def render(self):
-        player_frame = pygame.transform.scale(self.sprite_sheet.get_frame(self.action,self.frame),(288 * 2.5,128 * 2.5))
+        face_left = self.xspeed < 0
+        if abs(self.xspeed) < 1.5:
+            self.action = "idle"
+        else:
+            self.action = "run" 
+        if self.action == "idle":
+            self.max_frame = 12
+        else:
+            self.max_frame = 10
+        player_frame = pygame.transform.flip(pygame.transform.scale(self.sprite_sheet.get_frame(self.action,math.floor(self.frame % self.max_frame)),(288 * 2.5,128 * 2.5)),face_left,False)
         self.game.screen.blit(player_frame,(self.x,self.y))
+        self.frame += 0.2
     
     def handle_input(self):
         keys = pygame.key.get_pressed()
-        self.xspeed += (keys[pygame.K_RIGHT] - keys[pygame.K_LEFT])
-        self.x = (self.x + self.xspeed) * 0.9
+        self.xspeed += (keys[pygame.K_RIGHT] - keys[pygame.K_LEFT]) * 0.75
+        self.x += self.xspeed
+        self.xspeed *= 0.9
         
