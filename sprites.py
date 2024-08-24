@@ -8,7 +8,9 @@ class sprites:
         row = None
         if action == "idle":
             row = 0
-            return pygame.Surface.subsurface(self.img,(frame * 288,row * 128,288,128))
+        if action == "run":
+            row = 1
+        return pygame.Surface.subsurface(self.img,(frame * 288,row * 128,288,128))
     
     
     
