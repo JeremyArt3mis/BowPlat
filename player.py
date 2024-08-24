@@ -14,6 +14,7 @@ class Player:
         self.action = "run"
         self.frame = 0
         self.max_frame = 10
+        self.player_rect = pygame.Rect(0,0,0,0)
       
     
     def render(self):
@@ -28,11 +29,21 @@ class Player:
             self.max_frame = 10
         player_frame = pygame.transform.flip(pygame.transform.scale(self.sprite_sheet.get_frame(self.action,math.floor(self.frame % self.max_frame)),(288 * 2.5,128 * 2.5)),face_left,False)
         self.game.screen.blit(player_frame,(self.x,self.y))
+        self.player_rect = pygame.Rect(self.x + ,self.y,128,288)
+        print(self.x + 288,self.y + 128)
+        pygame.draw.rect(self.game.screen,(10,50,200),self.player_rect)
         self.frame += 0.2
+        
     
     def handle_input(self):
         keys = pygame.key.get_pressed()
         self.xspeed += (keys[pygame.K_RIGHT] - keys[pygame.K_LEFT]) * 0.75
+        
+
+    def update(self):
         self.x += self.xspeed
         self.xspeed *= 0.9
+        self.y += self.yspeed
+        if not self.player_rect.colliderect(self.game.test_rect):
+           self.yspeed -= self.yspeed
         
