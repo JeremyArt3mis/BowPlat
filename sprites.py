@@ -10,8 +10,16 @@ class sprites:
             row = 0
         if action == "run":
             row = 1
+        if action == "jump":
+            row = 3
+        if action == "fall":
+            row = 5
         return pygame.Surface.subsurface(self.img,(frame * 288,row * 128,288,128))
     
+    
+    
+
+
     
     
     
