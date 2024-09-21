@@ -21,41 +21,24 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
+                    quit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        self.player.attack1()
             #self.platformer_physics()
             self.player.handle_input()
             self.player.update()
             self.render()
             pygame.display.update()
     
-    def platformer_physics(self,_xsteps,_ysteps):
-        keys = pygame.key.get_pressed()
-        #vertical collision and movement
-        self.y += _ysteps
-        steps = -(steps / abs(steps))
-        while sprites.colliderect(self.test_rect):
-            self.y += steps
-            self.yspeed = 0
-            if (keys[pygame.K_UP] == True) and (steps > 0):
-                self.yspeed = 10
-        #horizantal collision and movement
-        xspeed += (keys[pygame.K_RIGHT] - keys[pygame.K_LEFT]) * 0.5
-        if not sprites.colliderect(self.test_rect):
-            self.x += _xsteps
-        if sprites.colliderect(self.test_rect):
-            self.x += 1
-            self.xspeed *= 0.8 * 0.95
-        while sprites.colliderect(self.test_rect):
-            self.x -= (_xsteps / abs(_xsteps))
-        xspeed *= 0.8
-        yspeed += 0.75
-
     
     def render(self):
         self.screen.fill((167,182,170))
         self.player.render()
+        for arrow in self.player.active_projectiles:
+            arrow.render()
         pygame.draw.rect(self.screen,(100,120,20),self.test_rect)
         
     
 game = Game()
-game.run()
 game.run()
