@@ -10,14 +10,16 @@ class Player:
         self.y = y
         self.sprite_sheet = sprite_sheet
         self.game = game
-        self.xspeed = 0
+        self.xspeed = 0.1
         self.yspeed = 0
+        self.dir = 1
         self.action = "run"
         self.frame = 0
         self.max_frame = 10
         self.player_rect = pygame.Rect(0,0,0,0)
         self.attack_frame = 0
         self.active_projectiles = []
+
         
       
     
@@ -54,24 +56,24 @@ class Player:
     
     def handle_input(self):
         keys = pygame.key.get_pressed()
-        print(self.attack_frame)
         self.xspeed += (keys[pygame.K_RIGHT] - keys[pygame.K_LEFT]) * 0.75
         if round(self.attack_frame) == 8:
             self.attack_frame += 1
             self.spawn_arrow()
+        self.dir = self.xspeed / abs(self.xspeed)
+        
         
 
     def attack1(self):
-        print(self.attack_frame)
         if self.action == "idle":
             self.action = "attack1"
         
             
     
     def spawn_arrow(self):
-        new_arrow = Projectile(self.game,0,pygame.image.load("BowPlat-main/Player_Assets/animations/spritesheets/Projectile_256x128_SpriteSheet.png"),self.x + 245,self.y + 100)
+        new_arrow = Projectile(self.game,0,pygame.image.load("Player_Assets/animations/spritesheets/Projectile_256x128_SpriteSheet.png"),self.x + 245,self.y + 100)
         self.active_projectiles.append(new_arrow)
-
+        
         
 
     def fix_collision(self,keys):
@@ -88,6 +90,8 @@ class Player:
         self.y += self.yspeed
         self.x += self.xspeed
         self.xspeed *= 0.9
+        
+        
     
     def handle_attack(self):
         if self.action == "attack1":
