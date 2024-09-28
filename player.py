@@ -54,15 +54,22 @@ class Player:
     
     def handle_input(self):
         keys = pygame.key.get_pressed()
+        print(self.attack_frame)
         self.xspeed += (keys[pygame.K_RIGHT] - keys[pygame.K_LEFT]) * 0.75
+        if round(self.attack_frame) == 8:
+            self.attack_frame += 1
+            self.spawn_arrow()
+        
 
     def attack1(self):
+        print(self.attack_frame)
         if self.action == "idle":
             self.action = "attack1"
-            self.spawn_arrow()
+        
+            
     
     def spawn_arrow(self):
-        new_arrow = Projectile(self.game,0,pygame.image.load("Player_Assets/animations/spritesheets/Projectile_256x128_SpriteSheet.png"),self.x + 245,self.y + 100)
+        new_arrow = Projectile(self.game,0,pygame.image.load("BowPlat-main/Player_Assets/animations/spritesheets/Projectile_256x128_SpriteSheet.png"),self.x + 245,self.y + 100)
         self.active_projectiles.append(new_arrow)
 
         
