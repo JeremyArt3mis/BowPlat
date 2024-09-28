@@ -1,5 +1,6 @@
 import pygame,sys
 
+
 class Projectile:
     def __init__(self,game,frame,img,x,y):
         pygame.init()
@@ -14,3 +15,5 @@ class Projectile:
     def render(self):
         image = pygame.transform.scale(self.get_frame(0,None),(256 * 2,128 * 2))
         self.game.screen.blit(image,(self.x,self.y))
+    def update(self):
+        self.x += 6
