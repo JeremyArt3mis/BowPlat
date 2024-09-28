@@ -1,6 +1,8 @@
+
 import pygame,sys
 from sprites import sprites
 from player import Player
+from projectile import Projectile
 
 class Game:
     def __init__(self):
@@ -36,6 +38,7 @@ class Game:
         self.screen.fill((167,182,170))
         self.player.render()
         for arrow in self.player.active_projectiles:
+            arrow.update(self.player.dir)
             arrow.render()
         pygame.draw.rect(self.screen,(100,120,20),self.test_rect)
         
