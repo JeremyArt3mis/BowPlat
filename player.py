@@ -19,6 +19,7 @@ class Player:
         self.player_rect = pygame.Rect(0,0,0,0)
         self.attack_frame = 0
         self.active_projectiles = []
+        self.health = 100
 
         
       
@@ -100,11 +101,13 @@ class Player:
                 self.attack_frame = 0
                 self.action = "idle"
 
-    def update(self):
+    def update(self,collide_rect):
         keys = pygame.key.get_pressed()
         self.yspeed += 0.5
         self.fix_collision(keys)
         self.move()
         self.handle_attack()
+        if self.player_rect.colliderect(collide_rect):
+            self.health -= 1/2
         
         

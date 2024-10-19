@@ -16,9 +16,14 @@ class Goblin:
         self.game = game
         self.frame = 0
         self.hit_box = pygame.Rect(self.x,self.y,50,100)
-    def update(self):
+        self.health = 20
+        self.speed = 3/4
+    def update(self,tx):
         self.frame += 0.2
-        self.x += 4
+        if self.x - 150 > tx:
+            self.x -= self.speed
+        else:
+            self.x += self.speed
     def render(self):
         self.hit_box.topleft = (self.x + 200,self.y + 200)
         pygame.draw.rect(self.game.screen,(255,0,0),self.hit_box,2)
