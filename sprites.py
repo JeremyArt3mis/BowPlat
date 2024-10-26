@@ -16,6 +16,8 @@ class sprites:
             row = 5
         if action == "attack1":
             row = 11
+        if action == "me_dead":
+            row = 16
         return pygame.Surface.subsurface(self.img,(frame * 288,row * 128,288,128))
     def get_frame_single_row(self,frame):
         return pygame.Surface.subsurface(self.img,(frame * 150,0,150,150))

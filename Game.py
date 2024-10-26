@@ -38,6 +38,11 @@ class Game:
     
     def render(self):
         self.screen.fill((167,182,170))
+        health_percent = max(0,min(1,self.player.health / 100))
+        r = int(255 * (1 - health_percent))
+        g = int(255 * (health_percent))
+        self.player_hp_bar = pygame.Rect(10,10,500 * health_percent,50)
+        pygame.draw.rect(self.screen,(r,g,0),self.player_hp_bar)
         self.player.render()
         for i in range(self.goblins):
             self.goblin.update(self.player.x)
@@ -45,9 +50,8 @@ class Game:
         for arrow in self.player.active_projectiles:
             arrow.update(self.player.dir)
             arrow.render()
-        pygame.draw.rect(self.screen,(100,120,20),self.test_rect)
-        self.player_hp_bar = pygame.Rect(10,10,500 * self.player.health / 100,50)
-        pygame.draw.rect(self.screen,(100 - self.player.health) * 2,self.player_hp_bar)
+        pygame.draw.rect(self.screen,(0,20,10),self.test_rect)
+       
         
     
 game = Game()

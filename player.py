@@ -20,6 +20,8 @@ class Player:
         self.attack_frame = 0
         self.active_projectiles = []
         self.health = 100
+        self.dead_animate = 0
+
 
         
       
@@ -27,7 +29,9 @@ class Player:
     def render(self):
         #animation
         face_left = self.xspeed < 0
-        if self.action != "attack1": 
+        if self.health < 1:
+            self.action = "me_dead"
+        elif self.action != "attack1": 
             if self.yspeed > 0:
                 self.action = "fall"
             elif self.yspeed < 0:
@@ -36,7 +40,9 @@ class Player:
                 self.action = "idle"
             else:
                 self.action = "run" 
-        if self.action == "attack1":
+        if self.action == "me_dead":
+            self.max_frame = 15
+        elif self.action == "attack1":
             self.max_frame = 13  
         elif self.action == "idle":
             self.max_frame = 12
@@ -52,16 +58,21 @@ class Player:
         self.game.screen.blit(player_frame,(self.x,self.y))
         self.player_rect = pygame.Rect(self.x + 345,self.y + 200,30,120)
         #pygame.draw.rect(self.game.screen,(10,50,200),self.player_rect)
-        self.frame += 0.2
+        if not (self.action == "me_dead"):
+            self.frame += 0.2
         
-    
+                
+
+
+            
     def handle_input(self):
-        keys = pygame.key.get_pressed()
-        self.xspeed += (keys[pygame.K_RIGHT] - keys[pygame.K_LEFT]) * 0.75
-        if round(self.attack_frame) == 8:
-            self.attack_frame += 1
-            self.spawn_arrow()
-        self.dir = self.xspeed / abs(self.xspeed)
+        if (self.action != "me_dead"):
+            keys = pygame.key.get_pressed()
+            self.xspeed += (keys[pygame.K_RIGHT] - keys[pygame.K_LEFT]) * 0.75
+            if round(self.attack_frame) == 8:
+                self.attack_frame += 1
+                self.spawn_arrow()
+            self.dir = self.xspeed / abs(self.xspeed)
         
         
 
@@ -83,7 +94,8 @@ class Player:
                 self.player_rect.y -= self.yspeed / abs(self.yspeed)
             self.y = self.player_rect.y - 199
             self.yspeed = 0
-            self.yspeed += -15 * keys[pygame.K_UP]
+            if self.action != "me_dead":
+                self.yspeed += -15 * keys[pygame.K_UP]
         else:
             self.yspeed += 0.0000000000001
     
