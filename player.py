@@ -20,11 +20,10 @@ class Player:
         self.attack_frame = 0
         self.active_projectiles = []
         self.health = 100
-        self.dead_animate = 0
+        self.done_dead = False
 
 
-        
-      
+
     
     def render(self):
         #animation
@@ -40,8 +39,9 @@ class Player:
                 self.action = "idle"
             else:
                 self.action = "run" 
+        #maxframes
         if self.action == "me_dead":
-            self.max_frame = 15
+            self.max_frame = 19
         elif self.action == "attack1":
             self.max_frame = 13  
         elif self.action == "idle":
@@ -50,6 +50,12 @@ class Player:
             self.max_frame = 10
         else:
             self.max_frame = 2
+
+        self.frame += 0.2
+        if self.action == "me_dead":
+            if self.frame % 19 > self.max_frame - 1:
+                self.done_dead = True
+                self.frame -= 0.2
         #render
         if self.action == "attack1":
             player_frame = pygame.transform.flip(pygame.transform.scale(self.sprite_sheet.get_frame(self.action,math.floor(self.attack_frame % self.max_frame)),(288 * 2.5,128 * 2.5)),face_left,False)
@@ -58,8 +64,7 @@ class Player:
         self.game.screen.blit(player_frame,(self.x,self.y))
         self.player_rect = pygame.Rect(self.x + 345,self.y + 200,30,120)
         #pygame.draw.rect(self.game.screen,(10,50,200),self.player_rect)
-        if not (self.action == "me_dead"):
-            self.frame += 0.2
+        
         
                 
 

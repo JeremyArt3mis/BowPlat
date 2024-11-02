@@ -13,9 +13,10 @@ class Game:
         self.width = 1700
         self.height = 1000
         self.screen = pygame.display.set_mode((self.width,self.height))
+        self.backround = pygame.image.load("backround.png")
         self.goblins = 3
         self.sprite_sheet = sprites(pygame.image.load("Player_Assets/animations/spritesheets/Player_Sheet_288x128.png"),100)
-        self.goblin_sheet = sprites(pygame.image.load("Enemy_Assets/Goblin/Attack3.png"),12)
+        self.goblin_sheet = sprites(pygame.image.load("Enemy_Assets/Goblin/Idle.png"),12)
         self.test_rect = pygame.Rect(0,900,1700,200)
         self.player = Player(500,300,self.sprite_sheet,self)
         self.goblin = Goblin(random.randint(-500,500),600,self.goblin_sheet,self)
@@ -37,7 +38,7 @@ class Game:
     
     
     def render(self):
-        self.screen.fill((167,182,170))
+        #self.screen.blit(self.backround,(0,0)) crazy code how to crash game
         health_percent = max(0,min(1,self.player.health / 100))
         r = int(255 * (1 - health_percent))
         g = int(255 * (health_percent))
