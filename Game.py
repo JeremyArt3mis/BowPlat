@@ -13,7 +13,8 @@ class Game:
         self.width = 1700
         self.height = 1000
         self.screen = pygame.display.set_mode((self.width,self.height))
-        self.backround = pygame.image.load("backround.png")
+        self.bit_backround = pygame.image.load("backround.png").convert()
+        self.backround = pygame.transform.scale(self.bit_backround,(self.width,self.height))
         self.goblins = 3
         self.sprite_sheet = sprites(pygame.image.load("Player_Assets/animations/spritesheets/Player_Sheet_288x128.png"),100)
         self.goblin_sheet = sprites(pygame.image.load("Enemy_Assets/Goblin/Idle.png"),12)
@@ -38,7 +39,7 @@ class Game:
     
     
     def render(self):
-        #self.screen.blit(self.backround,(0,0)) crazy code how to crash game
+        self.screen.blit(self.backround,(0,0))
         health_percent = max(0,min(1,self.player.health / 100))
         r = int(255 * (1 - health_percent))
         g = int(255 * (health_percent))
@@ -50,8 +51,9 @@ class Game:
             self.goblin.render()
         for arrow in self.player.active_projectiles:
             arrow.update(self.player.dir)
+            self.goblin.collision(arrow.hit_box)
             arrow.render()
-        pygame.draw.rect(self.screen,(0,20,10),self.test_rect)
+        pygame.draw.rect(self.screen,(101, 173, 107),self.test_rect)
        
         
     
