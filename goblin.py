@@ -29,6 +29,13 @@ class Goblin:
         else:
             self.x += self.speed
             self.face_left = False
+
+    def collision(self,colliderect):
+        if self.hit_box.colliderect(colliderect):
+            self.health -= 1
+
+    
+
     def render(self):
         self.hit_box.topleft = (self.x + 200,self.y + 200)
         pygame.draw.rect(self.game.screen,(255,0,0),self.hit_box,2)
