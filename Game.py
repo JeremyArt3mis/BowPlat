@@ -17,7 +17,7 @@ class Game:
         self.backround = pygame.transform.scale(self.bit_backround,(self.width,self.height))
         self.goblins = 3
         self.sprite_sheet = sprites(pygame.image.load("Player_Assets/animations/spritesheets/Player_Sheet_288x128.png"),100)
-        self.goblin_sheet = sprites(pygame.image.load("Enemy_Assets/Goblin/Idle.png"),12)
+        self.goblin_sheet = sprites(pygame.image.load("Enemy_Assets/Goblin/explode.png"),12)
         self.test_rect = pygame.Rect(0,900,1700,200)
         self.player = Player(500,300,self.sprite_sheet,self)
         self.goblin = Goblin(random.randint(-500,500),600,self.goblin_sheet,self)

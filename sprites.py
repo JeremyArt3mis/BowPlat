@@ -19,8 +19,13 @@ class sprites:
         if action == "me_dead":
             row = 16
         return pygame.Surface.subsurface(self.img,(frame * 288,row * 128,288,128))
+    
     def get_frame_single_row(self,frame):
         return pygame.Surface.subsurface(self.img,(frame * 150,0,150,150))
+    
+    def get_explosion_frame(self,frame):
+        return pygame.Surface.subsurface(self.img,(frame * 48,0,48))
+    #336x48
     
     
     
