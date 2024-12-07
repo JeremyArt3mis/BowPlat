@@ -17,7 +17,7 @@ class Goblin:
         self.frame = 0
         self.hit_box = pygame.Rect(self.x,self.y,50,100)
         self.health = 20
-        self.speed = 3/4
+        self.speed = 0.75
         self.health_width = 100
         self.health_height = 8
         self.face_left = True
@@ -27,11 +27,27 @@ class Goblin:
         self.alive = True
         self.death_frame = 0
         self.explode_frame = 0
+        self.death_anim_done = False
+        self.explode_anim_done = False
         self.explode_sp_sheet = sprites(pygame.image.load("Enemy_Assets\Goblin\explode.png"),7)
         self.death_sp_sheet = sprites(pygame.image.load("Enemy_Assets\Goblin\death.png"),4)
 
     def update(self,tx):
-        self.frame += 0.05
+        if self.health <= 0:
+            self.alive = False
+            self.speed = 0
+        if not self.death_anim_done:
+            self.death_frame += 0.05
+            if self.death_frame >= 3.9:
+                self.death_anim_done = True
+        elif not self.explode_anim_done:
+            self.explode_frame += 0.05
+            if self.explode_frame >= 6.9:
+                self.explode_anim_done = True
+        else:
+            self.frame += 0.05
+            
+        
         if self.x - 150 > tx:
             self.x -= self.speed
             self.face_left = True
@@ -55,34 +71,28 @@ class Goblin:
     
     def death_handler(self):
         #to explode or not to explode
-        current_death_frame = min(int(self.death_frame),4)
-        if self.alive == True:
-            self.action = "Idle"
-            image = self.sprite_sheet.get_frame_single_row(self.death_frame)
+        if self.alive == False:
+            if not self.death_anim_done:
+                current_death_frame = min(int(self.death_frame),4)
+                death_image = self.death_sp_sheet.get_frame_single_row(current_death_frame)
+                death_image = pygame.transform.flip(pygame.transform.scale(image,(self.img_width,self.img_height)),self.face_left,False)
+                self.game.screen.blit(death_image,(self.x,self.y))
+            elif not self.explode_anim_done:
+                current_explode_frame = min(int(self.explode_frame),7)
+                explode_image = self.explode_sp_sheet.get_explosion_frame(current_explode_frame)
+                explode_image = pygame.transform.flip(pygame.transform.scale(image,(self.img_width,self.img_height)),self.face_left,False)
+                self.game.screen.blit(explode_image,(self.x,self.y))
+            return 
+        else:
+            image = self.sprite_sheet.get_frame_single_row(math.floor((self.frame) % 4))
             image = pygame.transform.flip(pygame.transform.scale(image,(self.img_width,self.img_height)),self.face_left,False)
             self.game.screen.blit(image,(self.x,self.y))
-        elif self.alive == False:
-            if min(int(self.death_frame),4):
-                self.action = "death"
-            elif min(int(self.explode_frame),7):
-                self.action = "explode"
-        #image loading
-        if self.action == "death":
-            death_image = self.death_sp_sheet.get_frame_single_row(self.current_death_frame)
-            death_image = pygame.transform.flip(pygame.transform.scale(image,(self.img_width,self.img_height)),self.face_left,False)
-            self.game.screen.blit(death_image,(self.x,self.y))
-        elif self.action == "explode":
-            explode_image = self.explode_sp_sheet.get_explosion_frame(self.explode_frame)
-            explode_image = pygame.transform.flip(pygame.transform.scale(image,(self.img_width,self.img_height)),self.face_left,False)
-            self.game.screen.blit(explode_image,(self.x,self.y))
-        #put on ze screen
         
 
 
     def render(self):
         self.hit_box.topleft = (self.x + 200,self.y + 200)
         pygame.draw.rect(self.game.screen,(255,0,0),self.hit_box,2)
-        self.death_frame = math.floor(self.frame) % self.max_frame
         self.death_handler()
         self.health_rect = pygame.Rect(self.x + 175,self.y + 180,self.health_width * (self.health / 20),self.health_height)
         pygame.draw.rect(self.game.screen,(255,75,0),self.health_rect)
