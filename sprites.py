@@ -24,7 +24,7 @@ class sprites:
         return pygame.Surface.subsurface(self.img,(frame * 150,0,150,150))
     
     def get_explosion_frame(self,frame):
-        return pygame.Surface.subsurface(self.img,(frame * 48,0,48,48))
+        return pygame.Surface.subsurface(self.img,(frame * 48,0,336/7,48))
     #336x48
     
     
