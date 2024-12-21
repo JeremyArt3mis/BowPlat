@@ -96,7 +96,10 @@ class Goblin:
             self.game.screen.blit(image,(self.x,self.y))
        
     def render(self):
-        self.hit_box.topleft = (self.x + 200,self.y + 200)
+        if self.alive == True:
+            self.hit_box.topleft = (self.x + 200,self.y + 200)
+        else:
+            self.hit_box.topleft = (self.x + 500,self.y + 500)
         pygame.draw.rect(self.game.screen,(255,0,0),self.hit_box,2)
         self.death_handler()
         self.health_rect = pygame.Rect(self.x + 175,self.y + 180,self.health_width * (self.health / 20),self.health_height)
