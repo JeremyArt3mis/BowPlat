@@ -23,7 +23,7 @@ class Projectile:
         image = pygame.transform.scale(self.get_frame(0,None),(256 * 2,128 * 2))
         self.game.screen.blit(image,(self.x,self.y))
         self.hit_box.topleft = (self.x + 220,self.y + 120)
-        pygame.draw.rect(self.game.screen,(255,0,0),self.hit_box,2)
+        #pygame.draw.rect(self.game.screen,(255,0,0),self.hit_box,2)
     def update(self,direction):
         if self.run == 0:
             self.dir = direction

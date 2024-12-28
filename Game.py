@@ -20,7 +20,7 @@ class Game:
         self.sprite_sheet = sprites(pygame.image.load("Player_Assets/animations/spritesheets/Player_Sheet_288x128.png"),100)
         self.goblin_sheet = sprites(pygame.image.load("Enemy_Assets/Goblin/Idle.png"),12)
         self.test_rect = pygame.Rect(0,900,1700,200)
-        self.player = Player(500,300,self.sprite_sheet,self)
+        self.player = Player(500,0,self.sprite_sheet,self)
         self.goblin = Goblin(random.randint(-500,500),600,self.goblin_sheet,self)
         self.menu = Menu(self)
         self.state = "menu"
@@ -33,18 +33,21 @@ class Game:
                     quit()
                 elif event.type == pygame.KEYDOWN:
                     #handle menu and attack
+                    if event.key == pygame.K_SPACE:
+                        self.state = "start"
                     if self.state != "menu":
                         if event.key == pygame.K_SPACE:
                             self.player.attack1()
             #handle render stuff
             if self.state == "menu":
+                self.menu.update()
                 self.menu.render()
             else:
                 self.player.handle_input()
                 self.player.update(self.goblin.hit_box)
                 self.render()
             pygame.display.update()
-    
+            
     
     def render(self):
         self.screen.blit(self.backround,(0,0))
