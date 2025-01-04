@@ -23,7 +23,6 @@ class Menu:
         self.timer += 0.1
         self.sin_y = math.sin(self.timer)
         self.y += self.sin_y
-        print(self.sin_y)
     def render(self):
         self.game.screen.blit(self.game.backround,(0,0))
         title = self.font.render("Arrow Feast",True,(27,43,48))

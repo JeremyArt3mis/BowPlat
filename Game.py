@@ -16,6 +16,8 @@ class Game:
         self.screen = pygame.display.set_mode((self.width,self.height))
         self.bit_backround = pygame.image.load("backround.png").convert()
         self.backround = pygame.transform.scale(self.bit_backround,(self.width,self.height))
+        self.bit_fruit_tree = pygame.image.load("fruit_tree.png").convert_alpha()
+        self.fruit_tree = pygame.transform.scale(self.bit_fruit_tree,(self.width,self.height))
         self.goblins = 3
         self.sprite_sheet = sprites(pygame.image.load("Player_Assets/animations/spritesheets/Player_Sheet_288x128.png"),100)
         self.goblin_sheet = sprites(pygame.image.load("Enemy_Assets/Goblin/Idle.png"),12)
@@ -25,24 +27,34 @@ class Game:
         self.menu = Menu(self)
         self.state = "menu"
     def run(self):
-        while True:
+        running = True
+        while running:
             self.clock.tick(60)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    quit()
-                elif event.type == pygame.KEYDOWN:
-                    #handle menu and attack
-                    if event.key == pygame.K_SPACE:
-                        self.state = "start"
-                    if self.state != "menu":
+                    # pygame.quit()
+                    # quit()
+                    running = False
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_r:
+                        # pygame.quit()
+                        # quit()
+                        running = False
+                if self.state == "menu":
+                    if event.type == pygame.KEYDOWN:
+                        #handle menu and attack
+                        if event.key == pygame.K_SPACE:
+                            self.state = "game"
+                            print("Start")
+                elif self.state == "game":
+                    if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_SPACE:
                             self.player.attack1()
             #handle render stuff
             if self.state == "menu":
                 self.menu.update()
                 self.menu.render()
-            else:
+            elif self.state == "game":
                 self.player.handle_input()
                 self.player.update(self.goblin.hit_box)
                 self.render()
@@ -51,6 +63,7 @@ class Game:
     
     def render(self):
         self.screen.blit(self.backround,(0,0))
+        self.screen.blit(self.fruit_tree,(0,0))
         health_percent = max(0,min(1,self.player.health / 100))
         r = int(255 * (1 - health_percent))
         g = int(255 * (health_percent))
