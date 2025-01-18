@@ -5,6 +5,7 @@ from player import Player
 from projectile import Projectile
 from goblin import Goblin
 from menu import Menu
+from fruit import Fruit
 import random
 
 class Game:
@@ -26,6 +27,7 @@ class Game:
         self.goblin = Goblin(random.randint(-500,500),600,self.goblin_sheet,self)
         self.menu = Menu(self)
         self.state = "menu"
+        self.fruit = Fruit(32,32,pygame.image.load("Fruity.png"),4,2,2)
     def run(self):
         running = True
         while running:
@@ -57,12 +59,15 @@ class Game:
             elif self.state == "game":
                 self.player.handle_input()
                 self.player.update(self.goblin.hit_box)
+                self.fruit.start()
+                self.fruit.update()
                 self.render()
             pygame.display.update()
             
     
     def render(self):
         self.screen.blit(self.backround,(0,0))
+        self.fruit.render(self.screen)
         self.screen.blit(self.fruit_tree,(0,0))
         health_percent = max(0,min(1,self.player.health / 100))
         r = int(255 * (1 - health_percent))
