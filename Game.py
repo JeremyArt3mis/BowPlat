@@ -27,9 +27,15 @@ class Game:
         self.goblin = Goblin(random.randint(-500,500),600,self.goblin_sheet,self)
         self.menu = Menu(self)
         self.state = "menu"
-        self.fruit = Fruit(32,32,pygame.image.load("Fruity.png"),4,2,2)
+        self.fruit = Fruit(self.screen,32,32,pygame.image.load("Fruity.png"),5,3,2)
+        
+        #Beats
+        pygame.mixer.init()
+        pygame.mixer.music.load("backround_music.mp3")
+        pygame.mixer.music.play(-1)
     def run(self):
         running = True
+        self.fruit.start()
         while running:
             self.clock.tick(60)
             for event in pygame.event.get():
@@ -59,8 +65,7 @@ class Game:
             elif self.state == "game":
                 self.player.handle_input()
                 self.player.update(self.goblin.hit_box)
-                self.fruit.start()
-                self.fruit.update()
+                self.fruit.update(self.player.player_rect)
                 self.render()
             pygame.display.update()
             
