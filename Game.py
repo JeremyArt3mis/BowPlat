@@ -53,7 +53,6 @@ class Game:
                         #handle menu and attack
                         if event.key == pygame.K_SPACE:
                             self.state = "game"
-                            print("Start")
                 elif self.state == "game":
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_SPACE:
@@ -66,6 +65,7 @@ class Game:
                 self.player.handle_input()
                 self.player.update(self.goblin.hit_box)
                 self.fruit.update(self.player.player_rect)
+                self.update_arrow()
                 self.render()
             pygame.display.update()
             
@@ -80,16 +80,22 @@ class Game:
         self.player_hp_bar = pygame.Rect(10,10,500 * health_percent,50)
         pygame.draw.rect(self.screen,(r,g,0),self.player_hp_bar)
         self.player.render()
-        for i in range(self.goblins):
-            self.goblin.update(self.player.x)
-            self.goblin.render()
         for arrow in self.player.active_projectiles:
             arrow.update(self.player.dir)
             self.goblin.collision(arrow.hit_box)
             arrow.render()
+        for i in range(self.goblins):
+            self.goblin.update(self.player.x)
+            self.goblin.render()
         pygame.draw.rect(self.screen,(101, 173, 107),self.test_rect)
         
-       
+    def update_arrow(self):
+        for arrow in self.player.active_projectiles:
+            arrow.update(self.player.dir)
+            arrow.render()
+            if self.goblin.hit_box.colliderect(arrow.hit_box):
+                arrow.active = False
+
         
     
 game = Game()

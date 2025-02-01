@@ -67,15 +67,7 @@ class Goblin:
             self.health -= 1
         if self.health > 0:
             self.alive = True
-        #     self.max_frame = 4
-        #     self.img_width = 150 * self.scale
-        #     self.img_height = 150 * self.scale
-        # else:
-        #     self.alive = False
-        #     self.max_frame = 7
-        #     self.img_width = 48 * self.scale
-        #     self.img_height = 48 * self.scale
-   
+     
     def death_handler(self):
         #to explode or not to explode
         if self.alive == False:
