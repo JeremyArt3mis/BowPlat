@@ -65,6 +65,8 @@ class Goblin:
     def collision(self,colliderect):
         if self.hit_box.colliderect(colliderect):
             self.health -= 1
+            return True
+        return False
         if self.health > 0:
             self.alive = True
      

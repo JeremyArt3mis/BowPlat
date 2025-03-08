@@ -28,11 +28,12 @@ class Game:
         self.menu = Menu(self)
         self.state = "menu"
         self.fruit = Fruit(self.screen,32,32,pygame.image.load("Fruity.png"),5,3,2)
+
         
         #Beats
         pygame.mixer.init()
-        pygame.mixer.music.load("backround_music.mp3")
-        pygame.mixer.music.play(-1)
+        pygame.mixer.music.load("backround_music.wav")
+        pygame.mixer.music.play(-1) 
     def run(self):
         running = True
         self.fruit.start()
@@ -87,14 +88,23 @@ class Game:
         for i in range(self.goblins):
             self.goblin.update(self.player.x)
             self.goblin.render()
+            
+            
         pygame.draw.rect(self.screen,(101, 173, 107),self.test_rect)
         
     def update_arrow(self):
+        for i in range(self.goblins):
+            projectiles = []
         for arrow in self.player.active_projectiles:
             arrow.update(self.player.dir)
-            arrow.render()
-            if self.goblin.hit_box.colliderect(arrow.hit_box):
-                arrow.active = False
+            if self.goblin.collision(arrow.hit_box):
+                projectiles.append(arrow)
+            else: 
+                arrow.render()
+        for arrow in projectiles:
+            projectiles.remove(arrow)
+            # if self.goblin.hit_box.colliderect(arrow.hit_box):
+            #     arrow.active = False
 
         
     

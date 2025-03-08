@@ -31,11 +31,9 @@ class Projectile:
         self.hit_box.topleft = (self.x + 220,self.y + 120)
         #pygame.draw.rect(self.game.screen,(255,0,0),self.hit_box,2)
     
-    def update(self,direction,hitbox):
+    def update(self,direction):
         if not self.active:
             return
-        self.hit_enemy = self.hit_box.colliderect(hitbox)
-        print(self.hit_enemy)
         if self.run == 0:
             self.dir = direction
             if self.dir  == -1:
