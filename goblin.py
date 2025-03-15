@@ -1,5 +1,5 @@
 
-
+import random
 import pygame,sys
 import math
 from sprites import sprites
@@ -64,11 +64,11 @@ class Goblin:
 
     def collision(self,colliderect):
         if self.hit_box.colliderect(colliderect):
-            self.health -= 1
+            self.health -= 7
             return True
         return False
-        if self.health > 0:
-            self.alive = True
+        # if self.health > 0:
+        #     self.alive = True
      
     def death_handler(self):
         #to explode or not to explode

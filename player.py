@@ -101,8 +101,8 @@ class Player:
             self.yspeed = 0
             if self.action != "me_dead":
                 self.yspeed += -15 * keys[pygame.K_UP]
-        else:
-            self.yspeed += 0.0000000000001
+        # else:
+        #     self.yspeed += 0
     
     def move(self):
         self.y += self.yspeed

@@ -19,21 +19,28 @@ class Game:
         self.backround = pygame.transform.scale(self.bit_backround,(self.width,self.height))
         self.bit_fruit_tree = pygame.image.load("fruit_tree.png").convert_alpha()
         self.fruit_tree = pygame.transform.scale(self.bit_fruit_tree,(self.width,self.height))
-        self.goblins = 3
+
+        self.goblins = 1
         self.sprite_sheet = sprites(pygame.image.load("Player_Assets/animations/spritesheets/Player_Sheet_288x128.png"),100)
         self.goblin_sheet = sprites(pygame.image.load("Enemy_Assets/Goblin/Idle.png"),12)
         self.test_rect = pygame.Rect(0,900,1700,200)
         self.player = Player(500,0,self.sprite_sheet,self)
-        self.goblin = Goblin(random.randint(-500,500),600,self.goblin_sheet,self)
         self.menu = Menu(self)
         self.state = "menu"
         self.fruit = Fruit(self.screen,32,32,pygame.image.load("Fruity.png"),5,3,2)
-
+        self.time = 0
         
         #Beats
         pygame.mixer.init()
         pygame.mixer.music.load("backround_music.wav")
         pygame.mixer.music.play(-1) 
+        self.multiple_goblins = []
+        self.num_goblins = 3
+        for i in range(self.num_goblins):
+            goblin_x = random.randint(0,self.width)
+            goblin_y = 600
+            goblin = Goblin(goblin_x,goblin_y,self.goblin_sheet,self)
+            self.multiple_goblins.append(goblin)
     def run(self):
         running = True
         self.fruit.start()
@@ -64,7 +71,8 @@ class Game:
                 self.menu.render()
             elif self.state == "game":
                 self.player.handle_input()
-                self.player.update(self.goblin.hit_box)
+                # for goblin in self.multiple_goblins:
+                self.player.update(None)
                 self.fruit.update(self.player.player_rect)
                 self.update_arrow()
                 self.render()
@@ -85,26 +93,31 @@ class Game:
             arrow.update(self.player.dir)
             self.goblin.collision(arrow.hit_box)
             arrow.render()
-        for i in range(self.goblins):
-            self.goblin.update(self.player.x)
-            self.goblin.render()
+        for goblin in self.multiple_goblins:
+            goblin.update(self.player.x)
+            goblin.render()
             
             
         pygame.draw.rect(self.screen,(101, 173, 107),self.test_rect)
         
     def update_arrow(self):
+        self.time += 1
+        if self.goblins < 3:
+            if self.time % 10 == 0:
+                self.goblins += 1
         for i in range(self.goblins):
             projectiles = []
         for arrow in self.player.active_projectiles:
             arrow.update(self.player.dir)
-            if self.goblin.collision(arrow.hit_box):
-                projectiles.append(arrow)
-            else: 
-                arrow.render()
+            for i in self.multiple_goblins:
+                if self.goblin.collision(arrow.hit_box):
+                    projectiles.append(arrow)
+                else: 
+                    arrow.render()
         for arrow in projectiles:
-            projectiles.remove(arrow)
-            # if self.goblin.hit_box.colliderect(arrow.hit_box):
-            #     arrow.active = False
+            self.player.active_projectiles.remove(arrow)
+         
+        print(self.goblins)
 
         
     
