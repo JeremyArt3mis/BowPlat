@@ -89,31 +89,35 @@ class Game:
         self.player_hp_bar = pygame.Rect(10,10,500 * health_percent,50)
         pygame.draw.rect(self.screen,(r,g,0),self.player_hp_bar)
         self.player.render()
-        for arrow in self.player.active_projectiles:
-            arrow.update(self.player.dir)
-            self.goblin.collision(arrow.hit_box)
-            arrow.render()
         for goblin in self.multiple_goblins:
             goblin.update(self.player.x)
             goblin.render()
-            
-            
         pygame.draw.rect(self.screen,(101, 173, 107),self.test_rect)
         
     def update_arrow(self):
+        #update every arrow
+        for arrow in self.player.active_projectiles:
+            arrow.update(self.player.dir)
+        #increase timer
         self.time += 1
+        #spawn goblin every ten seconds if under 3 goblins in game
         if self.goblins < 3:
             if self.time % 10 == 0:
                 self.goblins += 1
-        for i in range(self.goblins):
-            projectiles = []
-        for arrow in self.player.active_projectiles:
-            arrow.update(self.player.dir)
-            for i in self.multiple_goblins:
-                if self.goblin.collision(arrow.hit_box):
-                    projectiles.append(arrow)
-                else: 
-                    arrow.render()
+        #define projectiles list
+        projectiles = []
+        #collision boolean
+        hit_goblin = False
+        #for loop for every goblin
+        for goblin in self.multiple_goblins:
+            #append arrow to list and collision
+            if goblin.collision(arrow.hit_box):
+                projectiles.append(arrow)
+                hit_goblin = True
+                break
+        #render arrow no matter what
+        arrow.render()
+        #delete arrow if colliding
         for arrow in projectiles:
             self.player.active_projectiles.remove(arrow)
          

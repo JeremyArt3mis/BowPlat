@@ -124,7 +124,9 @@ class Player:
         self.fix_collision(keys)
         self.move()
         self.handle_attack()
-        if self.player_rect.colliderect(collide_rect):
-            self.health -= 1/2
+        if collide_rect is not None:
+            if self.player_rect.colliderect(collide_rect):
+                self.health -= 1/2
+
         
         
