@@ -118,15 +118,16 @@ class Player:
                 self.attack_frame = 0
                 self.action = "idle"
 
-    def update(self,collide_rect):
+    def update(self, objects):
         keys = pygame.key.get_pressed()
         self.yspeed += 0.5
         self.fix_collision(keys)
         self.move()
         self.handle_attack()
-        if collide_rect is not None:
-            if self.player_rect.colliderect(collide_rect):
-                self.health -= 1/2
+        if objects is not []:
+            for object in objects:
+                if self.player_rect.colliderect(object.hit_box):
+                    self.health -= 0.5
 
         
         

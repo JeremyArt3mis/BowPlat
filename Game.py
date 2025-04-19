@@ -19,7 +19,6 @@ class Game:
         self.backround = pygame.transform.scale(self.bit_backround,(self.width,self.height))
         self.bit_fruit_tree = pygame.image.load("fruit_tree.png").convert_alpha()
         self.fruit_tree = pygame.transform.scale(self.bit_fruit_tree,(self.width,self.height))
-
         self.goblins = 1
         self.sprite_sheet = sprites(pygame.image.load("Player_Assets/animations/spritesheets/Player_Sheet_288x128.png"),100)
         self.goblin_sheet = sprites(pygame.image.load("Enemy_Assets/Goblin/Idle.png"),12)
@@ -29,6 +28,10 @@ class Game:
         self.state = "menu"
         self.fruit = Fruit(self.screen,32,32,pygame.image.load("Fruity.png"),5,3,2)
         self.time = 0
+        self.score = 0
+        self.score_font = pygame.font.Font("Font.ttf",100)
+        self.floor = pygame.image.load("FLOOR.png").convert_alpha()
+        self.real_floor = pygame.transform.scale(self.floor,(self.width,self.height))
         
         #Beats
         pygame.mixer.init()
@@ -72,10 +75,10 @@ class Game:
             elif self.state == "game":
                 self.player.handle_input()
                 # for goblin in self.multiple_goblins:
-                self.player.update(None)
+                self.player.update(self.multiple_goblins)
                 self.fruit.update(self.player.player_rect)
-                self.update_arrow()
                 self.render()
+                self.update_arrow()
             pygame.display.update()
             
     
@@ -91,19 +94,34 @@ class Game:
         self.player.render()
         for goblin in self.multiple_goblins:
             goblin.update(self.player.x)
-            goblin.render()
-        pygame.draw.rect(self.screen,(101, 173, 107),self.test_rect)
+            #if goblin near death last dying words PULSE, which equals -1 
+            pulse = goblin.render()
+            if (pulse == -1):
+                self.score += 1
+                self.multiple_goblins.remove(goblin)
+                self.goblins = 0
+        self.screen.blit(self.real_floor,(0,35))
+        #pygame.draw.rect(self.screen,(101, 173, 107),self.test_rect)
+        #font
+        score = self.score_font.render(f"Score: {self.score}",True,(27,43,48))
+        self.screen.blit(score,(700,300))
         
     def update_arrow(self):
         #update every arrow
         for arrow in self.player.active_projectiles:
             arrow.update(self.player.dir)
+            arrow.render()
         #increase timer
         self.time += 1
         #spawn goblin every ten seconds if under 3 goblins in game
         if self.goblins < 3:
-            if self.time % 10 == 0:
+            if self.time % 600 == 0:
                 self.goblins += 1
+                goblin_x = random.randint(0,self.width)
+                goblin_y = 600
+                goblin = Goblin(goblin_x,goblin_y,self.goblin_sheet,self)
+                self.multiple_goblins.append(goblin)
+
         #define projectiles list
         projectiles = []
         #collision boolean
@@ -111,12 +129,15 @@ class Game:
         #for loop for every goblin
         for goblin in self.multiple_goblins:
             #append arrow to list and collision
-            if goblin.collision(arrow.hit_box):
-                projectiles.append(arrow)
-                hit_goblin = True
-                break
+            for arrow in self.player.active_projectiles:
+                if goblin.collision(arrow.hit_box):
+                    if arrow not in projectiles:
+                        projectiles.append(arrow)
+                    hit_goblin = True
+                    break
         #render arrow no matter what
-        arrow.render()
+        # for arrow in self.player.active_projectiles:
+        #     arrow.render()
         #delete arrow if colliding
         for arrow in projectiles:
             self.player.active_projectiles.remove(arrow)

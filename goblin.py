@@ -4,6 +4,7 @@ import pygame,sys
 import math
 from sprites import sprites
 from player import Player
+ 
 
 class Goblin:
     def __init__(self,x,y,sprite_sheet,game):
@@ -70,7 +71,7 @@ class Goblin:
         # if self.health > 0:
         #     self.alive = True
      
-    def death_handler(self):
+    def death_handler(self)->int:
         #to explode or not to explode
         if self.alive == False:
             if not self.death_anim_done:
@@ -78,26 +79,30 @@ class Goblin:
                 death_image = self.death_sp_sheet.get_frame_single_row(current_death_frame)
                 death_image = pygame.transform.flip(pygame.transform.scale(death_image,(self.img_width,self.img_height)),self.face_left,False)
                 self.game.screen.blit(death_image,(self.x,self.y))
+                return 0  #still technically alive, respect the death animation
             elif not self.explode_anim_done:
                 current_explode_frame = min(int(self.explode_frame),6)
                 explode_image = self.explode_sp_sheet.get_explosion_frame(current_explode_frame)
                 explode_image = pygame.transform.flip(pygame.transform.scale(explode_image,(self.img_width,self.img_height)),self.face_left,False)
                 self.game.screen.blit(explode_image,(self.x,self.y))
-            return
+                return 0 #still technically alive, respect the death animation
+            return -1 #buddy's gone RIP
         else:
             image = self.sprite_sheet.get_frame_single_row(math.floor((self.frame) % 4))
             image = pygame.transform.flip(pygame.transform.scale(image,(self.img_width,self.img_height)),self.face_left,False)
             self.game.screen.blit(image,(self.x,self.y))
+            return 0 #he lives
        
-    def render(self):
+    def render(self)->int:
         if self.alive == True:
             self.hit_box.topleft = (self.x + 200,self.y + 200)
         else:
             self.hit_box.topleft = (self.x + 500,self.y + 500)
         pygame.draw.rect(self.game.screen,(255,0,0),self.hit_box,2)
-        self.death_handler()
+        pulse = self.death_handler() #take a pulse if dead, pulse = -1 else pulse = 0
         self.health_rect = pygame.Rect(self.x + 175,self.y + 180,self.health_width * (self.health / 20),self.health_height)
         pygame.draw.rect(self.game.screen,(255,75,0),self.health_rect)
+        return pulse #is gob the bob alive
 
 
                                                                                                                                     
