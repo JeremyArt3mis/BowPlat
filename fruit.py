@@ -26,7 +26,7 @@ class Fruit:
         self.angle = 0
         self.rotate_spd = 2
         self.hit_box = pygame.Rect(0,0,self.frame_width * self.scale,self.frame_height * self.scale)
-
+        self.canheal = False
 
 
     def start(self):
@@ -35,6 +35,7 @@ class Fruit:
         self.rotate_spd = 2
         self.x = random.randint(0,self.screen_width - self.frame_width)
         self.y = 50
+        self.canheal = True
 
     def extract_frames(self):
         self.scale_width = self.sprite_sheet.get_width() // self.frame_count
@@ -52,16 +53,20 @@ class Fruit:
         self.hit_box.x = self.x
         self.hit_box.y = self.y
 
-    def update(self,hit_box):
+    def update(self,player):
         if self.fall == True:
             self.y += self.fall_spd
             self.angle += self.rotate_spd
             self.angle %= 360
-            self.fall_spd += 0.2
+            self.fall_spd += 0.1
             self.rotate_spd *= 0.99
-            if self.hit_box.colliderect(hit_box):
-                self.scale *= 0.5
-                print("I'm TOUCHING YOU")
+            if self.hit_box.colliderect(player.player_rect):
+                if self.canheal == True:
+                    player.health += min(100,player.health + random.randint(10,30))
+                    self.canheal = False
+            else:
+                self.canheal = True
+                    
             self.update_hitbox()
             if not pygame.mixer.get_busy():
                 flap_snd.play(-1)
@@ -73,7 +78,7 @@ class Fruit:
             self.start()
 
     def render(self,screen):
-        pygame.draw.rect(self.screen,(0,0,0),self.hit_box,2)
+        #pygame.draw.rect(self.screen,(0,0,0),self.hit_box,2)
         if self.fall == True:
             cur_frame_surface = self.frames[self.frame]
             rotate_image = pygame.transform.rotate(cur_frame_surface,self.angle)

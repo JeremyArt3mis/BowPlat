@@ -19,7 +19,7 @@ class Goblin:
         self.frame = 0
         self.hit_box = pygame.Rect(self.x,self.y,50,100)
         self.health = 20
-        self.speed = 0.75
+        self.speed = 1.5
         self.health_width = 100
         self.health_height = 8
         self.face_left = True

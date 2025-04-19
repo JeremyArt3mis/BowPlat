@@ -32,6 +32,7 @@ class Game:
         self.score_font = pygame.font.Font("Font.ttf",100)
         self.floor = pygame.image.load("FLOOR.png").convert_alpha()
         self.real_floor = pygame.transform.scale(self.floor,(self.width,self.height))
+        self.blackout = pygame.transform.scale(pygame.image.load("blackout.png"),(self.width,self.height))
         
         #Beats
         pygame.mixer.init()
@@ -44,6 +45,7 @@ class Game:
             goblin_y = 600
             goblin = Goblin(goblin_x,goblin_y,self.goblin_sheet,self)
             self.multiple_goblins.append(goblin)
+            self.black = False
     def run(self):
         running = True
         self.fruit.start()
@@ -68,6 +70,23 @@ class Game:
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_SPACE:
                             self.player.attack1()
+                elif self.state == "game_over":
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_SPACE:
+                            self.state = "menu"
+                            self.score = 0
+                            self.player.health = 100
+                            self.player.x = 500
+                            self.player.y = 0
+                            self.multiple_goblins.clear()
+                            self.goblins = 3
+                            for i in range(self.num_goblins):
+                                goblin_x = random.randint(0,self.width)
+                                goblin_y = 600
+                                goblin = Goblin(goblin_x,goblin_y,self.goblin_sheet,self)
+                                self.multiple_goblins.append(goblin)
+                            self.player.active_projectiles = []
+                          
             #handle render stuff
             if self.state == "menu":
                 self.menu.update()
@@ -76,9 +95,26 @@ class Game:
                 self.player.handle_input()
                 # for goblin in self.multiple_goblins:
                 self.player.update(self.multiple_goblins)
-                self.fruit.update(self.player.player_rect)
+                self.fruit.update(self.player)
                 self.render()
                 self.update_arrow()
+                score = self.score_font.render(f"Score: {self.score}",True,(27,43,48))
+                if self.player.health <= 0:
+                    self.state = "game_over"
+                    self.black = True
+                else:
+                    self.screen.blit(score,(700,300))
+            elif self.state == "game_over":
+                 if self.black == False:
+                     self.screen.blit(self.blackout,(0,0))
+                     self.black = True
+                 game_over = self.score_font.render("GAME OVER",True,(27,43,48))
+                 self.screen.blit(game_over,(625,275))
+                 press_space = self.score_font.render("Press Space To Start Over",True,(27,43,48))
+                 self.screen.blit(press_space,(400,350))
+                 score = self.score_font.render(f"Score: {self.score}",True,(110, 28, 5))
+                 self.screen.blit(score,(700,500))
+                 
             pygame.display.update()
             
     
@@ -103,8 +139,7 @@ class Game:
         self.screen.blit(self.real_floor,(0,35))
         #pygame.draw.rect(self.screen,(101, 173, 107),self.test_rect)
         #font
-        score = self.score_font.render(f"Score: {self.score}",True,(27,43,48))
-        self.screen.blit(score,(700,300))
+        
         
     def update_arrow(self):
         #update every arrow
@@ -115,7 +150,7 @@ class Game:
         self.time += 1
         #spawn goblin every ten seconds if under 3 goblins in game
         if self.goblins < 3:
-            if self.time % 600 == 0:
+            if self.time % 300 == 0:
                 self.goblins += 1
                 goblin_x = random.randint(0,self.width)
                 goblin_y = 600
